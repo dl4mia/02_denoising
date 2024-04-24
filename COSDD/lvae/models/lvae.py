@@ -11,37 +11,23 @@ from .lvae_layers import (
 
 
 class LadderVAE(nn.Module):
-    """
-    Ladder Variational Autoencoder (LVAE) model.
-
+    """Ladder Variational Autoencoder (LVAE) model.
     Args:
         colour_channels (int): Number of input image channels.
         img_shape (tuple): Shape of the input image (height, width).
         s_code_channels (int): Number of channels in the returned latent code.
-        z_dims (list, optional): List of dimensions for the latent variables z.
-            If not provided, default value of [32] * 12 will be used.
-        blocks_per_layer (int, optional): Number of residual blocks per layer.
-            Default: 1.
-        n_filters (int, optional): Number of filters in the convolutional layers.
-            Default: 64.
-        learn_top_prior (bool, optional): Whether to learn the top prior.
-            Default: True.
-        res_block_type (str, optional): Type of residual block. Default: "bacbac".
-        merge_type (str, optional): Type of merge operation in the top-down layer.
-            Default: "residual".
-        stochastic_skip (bool, optional): Whether to use stochastic skip connections.
-            Default: True.
-        gated (bool, optional): Whether to use gated activations in the layers.
-            Default: True.
-        batchnorm (bool, optional): Whether to use batch normalization in the layers.
-            Default: True.
-        downsampling (list, optional): List of downsampling steps per layer.
-            If not provided, default value of [0] * n_layers will be used.
-        mode_pred (bool, optional): Whether to predict the mode of the distribution.
-            Default: False.
+        z_dims (list(int)): List of dimensions for the latent variables z.
+        blocks_per_layer (int): Number of residual blocks per layer.
+        n_filters (int): Number of filters in the convolutional layers.
+        learn_top_prior (bool): Whether to learn the top prior.
+        res_block_type (str): Type of residual block. Default: "bacbac".
+        merge_type (str): Type of merge operation in the top-down layer.
+        stochastic_skip (bool): Whether to use stochastic skip connections.
+        gated (bool): Whether to use gated activations in the layers.
+        batchnorm (bool): Whether to use batch normalization in the layers.
+        downsampling (list(int)): Binary list of downsampling per layer.
+        mode_pred (bool): Whether to predict the mode of the distribution.
     """
-class LadderVAE(nn.Module):
-
 
     def __init__(
         self,

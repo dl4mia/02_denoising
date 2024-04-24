@@ -2,33 +2,24 @@ import torch
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-def autocorrelation(arrs, max_lag=25):
-    """ Compute the spatial autocorrelation of a list of arrays.
-    Args:
-        arrs: list of arrays
-        max_lag: int, the maximum lag to compute the autocorrelation for
-    Returns:
-        result: 2D tensor, the autocorrelation of the arrays
-    """
-    if not isinstance(arrs, list):
-        arrs = [arrs]
-    covar = torch.zeros((max_lag, max_lag))
-    covar_denom = torch.zeros((max_lag, max_lag))
-    var = 0
-    var_denom = 0
-    for a in arrs:
-        a = a - a.mean()
-        for i in range(max_lag):
-            for j in range(max_lag):
-                c = (a[..., :a.shape[-2]-i, :a.shape[-1]-j] * a[..., i:, j:]).sum()
-                n = a[..., :a.shape[-2]-i, :a.shape[-1]-j].numel()
-                covar[i, j] += c
-                covar_denom[i, j] += n
-        var += (a**2).sum()
-        var_denom += a.numel()
-    covar = covar / covar_denom
-    var = var / var_denom
 
+def autocorrelation(arr, max_lag=25):
+    """Compute the autocorrelation over the last 2 dimensions of an arrays.
+    Args:
+        arr (torch.Tensor): Array with shape (..., H, W)
+        max_lag (int): The maximum lag to compute the autocorrelation over
+    Returns:
+        result (torch.Tensor): 2D array of autocorrelation values
+    """
+    covar = torch.zeros(max_lag, max_lag)
+
+    arr = arr - arr.mean()
+    for i in range(max_lag):
+        for j in range(max_lag):
+            c = (arr[..., :arr.shape[-2]-i, :arr.shape[-1]-j] * arr[..., i:, j:]).mean()
+            covar[i, j] = c
+
+    var = (arr**2).mean()
     ac = covar / var
     return ac
 

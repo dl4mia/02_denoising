@@ -152,7 +152,7 @@ class DVLAE(pl.LightningModule):
             dd_scheduler.step(self.trainer.callback_metrics["val/dd_loss"])
 
     def log_tensorboard_images(self, img, img_name):
-        img = img.cpu().numpy()
+        img = img.cpu().half().numpy()
         normalised_img = (img - np.percentile(img, 1)) / (
             np.percentile(img, 99) - np.percentile(img, 1)
         )
