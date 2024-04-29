@@ -26,13 +26,13 @@ pip install "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/
 ## Exercises
 
 1. [Context-aware restoration]()
-2. [Noise2Void]()
-3. [COSDD]()
+2. [Noise2Void](Noise2Void/n2v.ipynb)
+3. [COSDD](COSDD/README.md)
 
 
 ## Bonus
 
-- [Image splitting]()
+- [Image splitting](bonus_denoisplit/bonus_denoisplit.ipynb)
 - [N2V2]()
 - [Noise2Noise]()
 
