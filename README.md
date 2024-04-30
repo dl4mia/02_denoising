@@ -7,19 +7,17 @@
 Welcome to the Image Regression exercises. In this part of the course, we will explore
 how to use deep learning to denoise images, with examples of widely used algorithm for
 both supervised and unsupervised denoising. We will also explore the difference
-between unstructured and structured noise.
+between unstructured and structured noise, or between UNet (which you are familiar with
+by now) and VAE architectures (see COSDD exercise)!
 
-Finally, we have bonus exercises for those wanted to explore more algorithms or
+Finally, we have bonus exercises for those wanted to explore more denoising algorithms or
 image splitting!
 
 
-## Environment
+## Create the environment
 
 ```bash
-mamba create -y -n regression python=3.10
-mamba activate regression
-mamba install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
-pip install "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/careamics.git@dl4mia"
+sh setup.sh
 ```
 
 
