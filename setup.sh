@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # source the mamba installation to be able to activate the env
+source /localscratch/miniforge3/etc/profile.d/mamba.sh
 source /localscratch/miniforge3/etc/profile.d/conda.sh
 
 # script directory (used to make sure the relative paths are fine)
@@ -9,7 +10,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # create environment
 ENV="02_regression"
 mamba create -y -n "$ENV" python=3.10
-conda activate "$ENV"
+mamba activate "$ENV"
 
 # check that the environment was activated
 if [[ "$CONDA_DEFAULT_ENV" == "$ENV" ]]; then
