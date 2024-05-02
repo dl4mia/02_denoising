@@ -18,8 +18,9 @@ image splitting!
 ```bash
 mamba create -y -n regression python=3.10
 mamba activate regression
-mamba install pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
+mamba install pytorch-gpu cuda-toolkit=11.8 torchvision -c nvidia -c conda-forge -c pytorch
 pip install "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/careamics.git@dl4mia"
+
 ```
 
 
