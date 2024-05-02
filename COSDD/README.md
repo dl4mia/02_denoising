@@ -13,11 +13,13 @@ Abstract. Accurate analysis of microscopy images is hindered by the presence of 
 
 ### BibTeX
 ```
-@article{salmon2023unsupervised,
-  title={Unsupervised Structured Noise Removal with Variational Lossy Autoencoder},
-  author={Salmon, Benjamin and Krull, Alexander},
-  journal={arXiv preprint arXiv:2310.07887},
-  year={2023}
+@misc{salmon2024unsupervised,
+      title={Unsupervised Denoising for Signal-Dependent and Row-Correlated Imaging Noise}, 
+      author={Benjamin Salmon and Alexander Krull},
+      year={2024},
+      eprint={2310.07887},
+      archivePrefix={arXiv},
+      primaryClass={eess.IV}
 }
 ```
 
