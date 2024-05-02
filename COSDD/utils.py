@@ -1,36 +1,55 @@
+import random
+
 import torch
 import numpy as np
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
-def autocorrelation(arrs, max_lag=25):
-    """ Compute the spatial autocorrelation of a list of arrays.
+
+def autocorrelation(arr, max_lag=25):
+    """Compute the autocorrelation over the last 2 dimensions of an arrays.
     Args:
-        arrs: list of arrays
-        max_lag: int, the maximum lag to compute the autocorrelation for
+        arr (torch.Tensor): Array with shape (..., H, W)
+        max_lag (int): The maximum lag to compute the autocorrelation over
     Returns:
-        result: 2D tensor, the autocorrelation of the arrays
+        result (torch.Tensor): 2D array of autocorrelation values
     """
-    if not isinstance(arrs, list):
-        arrs = [arrs]
-    covar = torch.zeros((max_lag, max_lag))
-    covar_denom = torch.zeros((max_lag, max_lag))
-    var = 0
-    var_denom = 0
-    for a in arrs:
-        a = a - a.mean()
-        for i in range(max_lag):
-            for j in range(max_lag):
-                c = (a[..., :a.shape[-2]-i, :a.shape[-1]-j] * a[..., i:, j:]).sum()
-                n = a[..., :a.shape[-2]-i, :a.shape[-1]-j].numel()
-                covar[i, j] += c
-                covar_denom[i, j] += n
-        var += (a**2).sum()
-        var_denom += a.numel()
-    covar = covar / covar_denom
-    var = var / var_denom
+    covar = torch.zeros(max_lag, max_lag)
 
+    arr = arr - arr.mean()
+    for i in range(max_lag):
+        for j in range(max_lag):
+            c = (arr[..., :arr.shape[-2]-i, :arr.shape[-1]-j] * arr[..., i:, j:]).mean()
+            covar[i, j] = c
+
+    var = (arr**2).mean()
     ac = covar / var
     return ac
+
+
+class RandomCrop:
+    """
+    Randomly crops n-dimensional tensor to given size.
+
+    Infers input tensor dimensions from len(output_size).
+
+    Args:
+        output_size (tuple): Desired output size of the crop.
+    """
+    def __init__(self, output_size):
+        self.output_size = output_size
+        self.n_dims = len(output_size)
+
+    def __call__(self, x):
+        x_size = x.size()[1:]
+        assert all(xs >= os for xs, os in zip(x_size, self.output_size))
+
+        start_idxs = [random.randint(0, xs - os) for xs, os in zip(x_size, self.output_size)]
+        end_idxs = [si + os for si, os in zip(start_idxs, self.output_size)]
+        crop = [slice(0, x.size(0))] 
+        crop += [slice(si, ei) for si, ei in zip(start_idxs, end_idxs)]
+
+        return x[crop]
 
 
 class TrainDataset(torch.utils.data.Dataset):
@@ -79,3 +98,19 @@ def normalise(x):
     high = np.percentile(x, 99.9)
     x = (x - low) / (high - low)
     return x
+
+
+def plot_to_image(figure):
+    """Converts the matplotlib plot specified by 'figure' to a PNG image and
+    returns it. The supplied figure is closed and inaccessible after this call."""
+    canvas = figure.canvas
+    width, height = canvas.get_width_height()
+    canvas.draw()
+    image = (
+        np.frombuffer(canvas.buffer_rgba(), dtype="uint8")
+        .reshape(height, width, 4)
+        .transpose(2, 0, 1)
+    )
+    image = image / 255
+    plt.close(figure)
+    return image
