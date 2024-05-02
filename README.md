@@ -17,29 +17,20 @@ image splitting!
 ## Create the environment
 
 ```bash
-<<<<<<< HEAD
 sh setup.sh
-=======
-mamba create -y -n regression python=3.10
-mamba activate regression
-mamba install pytorch-gpu cuda-toolkit=11.8 torchvision -c nvidia -c conda-forge -c pytorch
-pip install "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/careamics.git@dl4mia"
-
->>>>>>> origin/care
 ```
 
 
 ## Exercises
 
-1. [Context-aware restoration]()
+1. [Context-aware restoration](CARE)
 2. [Noise2Void](Noise2Void/n2v.ipynb)
 3. [COSDD](COSDD/README.md)
 
 
 ## Bonus
 
-- [Image splitting](bonus_denoisplit/bonus_denoisplit.ipynb)
-- [N2V2]()
+- [Image splitting with denoiSplit](bonus_denoisplit/bonus_denoisplit.ipynb)
 - [Noise2Noise]()
 
 
