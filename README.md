@@ -17,7 +17,15 @@ image splitting!
 ## Create the environment
 
 ```bash
+<<<<<<< HEAD
 sh setup.sh
+=======
+mamba create -y -n regression python=3.10
+mamba activate regression
+mamba install pytorch-gpu cuda-toolkit=11.8 torchvision -c nvidia -c conda-forge -c pytorch
+pip install "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/careamics.git@dl4mia"
+
+>>>>>>> origin/care
 ```
 
 
