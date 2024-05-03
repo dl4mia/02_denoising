@@ -27,5 +27,5 @@ if [[ "$CONDA_DEFAULT_ENV" == "$ENV" ]]; then
 
     # copy files from the other repo for the CARE exercise
     cd "$SCRIPT_DIR"
-    cp ../01_segmentation/unet.py CARE/
+    cp ../01_segmentation/unet.py 00_CARE/
 fi
