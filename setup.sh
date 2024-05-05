@@ -27,11 +27,5 @@ if [[ "$CONDA_DEFAULT_ENV" == "$ENV" ]]; then
 
     # copy files from the other repo for the CARE exercise
     cd "$SCRIPT_DIR"
-
-    # test if unet.py can be found
-    if [ -f "../01_segmentation" ]; then
-        cp ../01_segmentation/unet.py 00_CARE/
-    else
-        echo "Could not find 01_segmentation/unet.py. Make sure you have the 01_segmentation folder next to the 02_regression folder."
-    fi
+    cp ../01_segmentation/unet.py 00_CARE/
 fi
