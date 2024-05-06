@@ -13,12 +13,20 @@ class SDecoder(nn.Module):
         n_filters (int): Number of filters in the convolutional layers.
         n_layers (int): Number of layers in the network.
         kernel_size (int): Size of the convolutional kernel.
+        checkpointed (bool): Whether to use activation checkpointing in the forward pass.
     """
 
     def __init__(
-        self, colour_channels, s_code_channels, n_filters=64, n_layers=4, kernel_size=3
+        self,
+        colour_channels,
+        s_code_channels,
+        n_filters=64,
+        n_layers=4,
+        kernel_size=3,
+        checkpointed=False,
     ):
         super().__init__()
+        self.checkpointed = checkpointed
         if n_layers < 2:
             raise ValueError("n_layers must be greater than 2")
 
@@ -60,9 +68,9 @@ class SDecoder(nn.Module):
 
     def forward(self, s_code):
         for i, layer in enumerate(self.net):
-            if i % 2 == 0:
+            if i % 2 == 0 and self.checkpointed:
                 s_code = checkpoint(
-                    layer, 
+                    layer,
                     s_code,
                     use_reentrant=False,
                 )

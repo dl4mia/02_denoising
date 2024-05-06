@@ -22,6 +22,7 @@ class PixelCNN(nn.Module):
         n_filters (int): Number of filters in the convolutional layers.
         n_layers (int): Number of layers.
         n_gaussians (int): Number of gaussians in the predictive mixture model.
+        checkpointed (bool): Whether to use activation checkpointing in the forward pass.
 
     """
 
@@ -34,6 +35,7 @@ class PixelCNN(nn.Module):
         n_filters=64,
         n_layers=4,
         n_gaussians=5,
+        checkpointed=False,
     ):
         super().__init__()
         assert noise_direction in ("x", "y", "z")
@@ -53,6 +55,7 @@ class PixelCNN(nn.Module):
             n_filters=n_filters,
             n_layers=n_layers,
             direction=noise_direction,
+            checkpointed=checkpointed,
         )
 
         c_out = n_gaussians * colour_channels * 3

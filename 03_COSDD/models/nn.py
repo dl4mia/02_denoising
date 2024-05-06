@@ -94,7 +94,7 @@ class ResidualBlock(nn.Module):
 
         self.block = nn.Sequential()
         for _ in range(2):
-            self.block.append(BatchNorm(self.channels, self.channels))
+            self.block.append(BatchNorm(self.channels))
             self.block.append(nn.Mish())
             conv = Conv(
                 self.channels,
@@ -154,7 +154,7 @@ class ResBlockWithResampling(nn.Module):
                 kernel_size=3,
                 stride=2,
                 padding=1,
-                padding_mode="replicate",
+                # padding_mode="replicate",
                 groups=groups,
             )
         elif c_in != c_out:
@@ -362,21 +362,21 @@ class NormalStochasticBlock(nn.Module):
                 2 * c_vars,
                 kernel,
                 padding=pad,
-                padding_mode="replicate",
+                # padding_mode="replicate",
             )
         self.conv_in_q = Conv(
             c_in,
             2 * c_vars,
             kernel,
             padding=pad,
-            padding_mode="replicate",
+            # padding_mode="replicate",
         )
         self.conv_out = Conv(
             c_vars,
             c_out,
             kernel,
             padding=pad,
-            padding_mode="replicate",
+            # padding_mode="replicate",
         )
 
     def forward(
@@ -744,6 +744,7 @@ class PixelCNNLayers(nn.Module):
         n_filters (int): Number of filters in the convolutional layers.
         n_layers (int): Number of layers in the PixelCNN.
         direction (str): Axis along which noise is correlated. Default is 'x'.
+        checkpointed (bool): Whether to use activation checkpointing in the forward pass.
     """
 
     def __init__(
@@ -754,8 +755,10 @@ class PixelCNNLayers(nn.Module):
         n_filters,
         n_layers,
         direction="x",
+        checkpointed=False,
     ):
         super().__init__()
+        self.checkpointed = checkpointed
 
         middle_layer = n_layers // 2 + n_layers % 2
 
@@ -813,7 +816,7 @@ class PixelCNNLayers(nn.Module):
             torch.Tensor: Output tensor.
         """
         for i, layer in enumerate(self.layers):
-            if i % 2 == 0:
+            if i % 2 == 0 and self.checkpointed:
                 x, s_code = checkpoint(
                     layer,
                     x, 

@@ -28,6 +28,8 @@ class Hub(pl.LightningModule):
     n_grad_batches : int, optional
         The number of batches to accumulate gradients over before updating the
         weights.
+    checkpointed : bool, optional
+        Whether to use activation checkpointing in the forward pass.
     """
 
     def __init__(
@@ -39,6 +41,7 @@ class Hub(pl.LightningModule):
         data_mean=0,
         data_std=1,
         n_grad_batches=1,
+        checkpointed=True,
     ):
         self.save_hyperparameters()
 
@@ -50,6 +53,16 @@ class Hub(pl.LightningModule):
         self.data_mean = data_mean
         self.data_std = data_std
         self.n_grad_batches = n_grad_batches
+        
+        if hasattr(vae, "checkpointed"):
+            vae.checkpointed = checkpointed
+        if hasattr(ar_decoder, "checkpointed"):
+            ar_decoder.checkpointed = checkpointed
+        if hasattr(s_decoder, "checkpointed"):
+            s_decoder.checkpointed = checkpointed
+        if direct_denoiser is not None:
+            if hasattr(direct_denoiser, "checkpointed"):
+                direct_denoiser.checkpointed = checkpointed
 
         self.automatic_optimization = False
 

@@ -20,6 +20,7 @@ class UNet(nn.Module):
         batchnorm (bool): Whether to use batch normalization in the residual blocks.
         downsampling (list): Number of downsampling steps per layer.
         loss_fn (str): Loss function to use. Default: 'L2'.
+        checkpointed (bool): Whether to use activation checkpointing in the forward pass.
     """
 
     def __init__(
@@ -31,6 +32,7 @@ class UNet(nn.Module):
         td_skip=True,
         downsampling=None,
         loss_fn="L2",
+        checkpointed=False,
     ):
         super().__init__()
         self.n_layers = n_layers
@@ -38,6 +40,7 @@ class UNet(nn.Module):
         self.n_filters = n_filters
         self.td_skip = td_skip
         self.loss_fn = loss_fn
+        self.checkpointed = checkpointed
 
         # Number of downsampling steps per layer
         if downsampling is None:
@@ -48,7 +51,13 @@ class UNet(nn.Module):
         assert len(downsampling) == self.n_layers
 
         self.first_bottom_up = nn.Sequential(
-            Conv(colour_channels, n_filters, 5, padding=2, padding_mode="replicate"),
+            Conv(
+                colour_channels,
+                n_filters,
+                5,
+                padding=2,
+                # padding_mode="replicate",
+            ),
             nn.Mish(),
             ResBlockWithResampling(
                 c_in=n_filters,
@@ -113,7 +122,7 @@ class UNet(nn.Module):
         # need in the top-down pass
         bu_values = []
         for i in range(self.n_layers):
-            if i % 2 == 0:
+            if i % 2 == 0 and self.checkpointed:
                 x = checkpoint(
                     self.bottom_up_layers[i],
                     x,
@@ -133,7 +142,7 @@ class UNet(nn.Module):
         for i in reversed(range(self.n_layers)):
             skip_input = out  # TODO or out_pre_residual? or both?
 
-            if i % 2 == 0:
+            if i % 2 == 0 and self.checkpointed:
                 out = checkpoint(
                     self.top_down_layers[i],
                     out,

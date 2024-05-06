@@ -21,6 +21,7 @@ class LadderVAE(nn.Module):
         learn_top_prior (bool): Whether to learn the top prior.
         stochastic_skip (bool): Whether to use stochastic skip connections.
         downsampling (list(int)): Binary list of downsampling per layer.
+        checkpointed (bool): Whether to use activation checkpointing in the forward pass.
     """
 
     def __init__(
@@ -34,6 +35,7 @@ class LadderVAE(nn.Module):
         learn_top_prior=True,
         stochastic_skip=True,
         downsampling=None,
+        checkpointed=False,
     ):
         if z_dims is None:
             z_dims = [32] * 12
@@ -44,6 +46,7 @@ class LadderVAE(nn.Module):
         self.blocks_per_layer = blocks_per_layer
         self.n_filters = n_filters
         self.stochastic_skip = stochastic_skip
+        self.checkpointed = checkpointed
 
         # Number of downsampling steps per layer
         if downsampling is None:
@@ -60,7 +63,7 @@ class LadderVAE(nn.Module):
                 n_filters,
                 5,
                 padding=2,
-                padding_mode="replicate",
+                # padding_mode="replicate",
             ),
             nn.Mish(),
             ResBlockWithResampling(
@@ -149,7 +152,7 @@ class LadderVAE(nn.Module):
         # need in the top-down pass
         bu_values = []
         for i in range(self.n_layers):
-            if i % 2 == 0:
+            if i % 2 == 0 and self.checkpointed:
                 x = checkpoint(
                     self.bottom_up_layers[i],
                     x,
@@ -190,7 +193,7 @@ class LadderVAE(nn.Module):
 
             skip_input = p_params
 
-            if i % 2 == 0:
+            if i % 2 == 0 and self.checkpointed:
                 z, q, p = checkpoint(
                     self.top_down_layers[i],
                     p_params,
