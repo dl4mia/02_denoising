@@ -24,7 +24,7 @@ if [[ "$CONDA_DEFAULT_ENV" == "$ENV" ]]; then
     mamba install -y pytorch-gpu cuda-toolkit=11.8 torchvision -c nvidia -c conda-forge -c pytorch
     #mamba install -y pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
     pip install ipykernel "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/careamics.git"
-
+    pip install jupyter
     # copy files from the other repo for the CARE exercise
     cd "$SCRIPT_DIR"
     cp ../01_segmentation/unet.py 00_CARE/
