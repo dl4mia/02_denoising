@@ -23,14 +23,14 @@ sh setup.sh
 
 ## Exercises
 
-1. [Context-aware restoration](CARE)
-2. [Noise2Void](Noise2Void/n2v.ipynb)
-3. [COSDD](COSDD/README.md)
+1. [Context-aware restoration](00_CARE/care_exercise.ipynb)
+2. [Noise2Void](01_Noise2Void/n2v.ipynb)
+3. [COSDD](03_COSDD/README.md)
 
 
 ## Bonus
 
-- [Image splitting with denoiSplit](bonus_denoisplit/bonus_denoisplit.ipynb)
-- [Noise2Noise]()
+- [Image splitting with denoiSplit](04_bonus_denoiSplit/bonus_denoisplit.ipynb)
+- [Noise2Noise](04_bonus_Noise2Noise/n2n.ipynb)
 
 
