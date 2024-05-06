@@ -25,6 +25,7 @@ if [[ "$CONDA_DEFAULT_ENV" == "$ENV" ]]; then
     #mamba install -y pytorch torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
     pip install ipykernel "careamics[examples,tensorboard] @ git+https://github.com/CAREamics/careamics.git"
     pip install jupyter
+    python -m ipykernel install --user --name "02_regression"
     # copy files from the other repo for the CARE exercise
     cd "$SCRIPT_DIR"
     cp ../01_segmentation/unet.py 00_CARE/
