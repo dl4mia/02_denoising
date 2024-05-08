@@ -398,8 +398,9 @@ class NormalStochasticBlock(nn.Module):
             force_constant_output (bool, optional): Whether to force the output to be constant across batch.
 
         Returns:
-            torch.Tensor: z sample from p or q.
-            torch.Tensor: Elementwise KL divergence between q(z|x) and p(z).
+            torch.Tensor: Sample from either q(z|x) or p(z).
+            torch.Distribution: q(z|x)
+            torch.Distribution: p(z)
         """
 
         assert (forced_latent is None) or (not use_mode)
@@ -543,7 +544,8 @@ class VAETopDownLayer(nn.Module):
 
         Returns:
             torch.Tensor: Sample from either q(z|x) or p(z).
-            torch.Tensor: Elementwise KL divergence between q(z|x) and p(z).
+            torch.Distribution: q(z|x)
+            torch.Distribution: p(z)
         """
 
         if self.is_top_layer:
