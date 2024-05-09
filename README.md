@@ -31,8 +31,8 @@ jupyter lab
 
 ## Exercises
 
-1. [Context-aware restoration](00_CARE/care_exercise.ipynb)
-2. [Noise2Void](01_Noise2Void/n2v.ipynb)
+1. [Context-aware restoration](01_CARE/care_exercise.ipynb)
+2. [Noise2Void](02_Noise2Void/n2v.ipynb)
 3. [COSDD](03_COSDD/README.md)
 
 
