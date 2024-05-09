@@ -14,12 +14,20 @@ Finally, we have bonus exercises for those wanted to explore more denoising algo
 image splitting!
 
 
-## Create the environment
+## Setup
 
-```bash
-sh setup.sh
+Please run the setup script to create the environment for these exercises and download data.
+
+``` bash
+source setup.sh
 ```
 
+
+When you are ready to start the exercise, make sure you are in your base environment and then run jupyter lab.
+
+``` bash
+jupyter lab
+```
 
 ## Exercises
 

@@ -14,12 +14,18 @@ def autocorrelation(arr, max_lag=25):
     Returns:
         result (torch.Tensor): 2D array of autocorrelation values
     """
+    assert (
+        arr.shape[-1] >= max_lag and arr.shape[-2] >= max_lag
+    ), f"Patch side length must be greater than {max_lag} but is {arr.shape[-2]} x {arr.shape[-1]}"
+    
     covar = torch.zeros(max_lag, max_lag)
 
     arr = arr - arr.mean()
     for i in range(max_lag):
         for j in range(max_lag):
-            c = (arr[..., :arr.shape[-2]-i, :arr.shape[-1]-j] * arr[..., i:, j:]).mean()
+            c = (
+                arr[..., : arr.shape[-2] - i, : arr.shape[-1] - j] * arr[..., i:, j:]
+            ).mean()
             covar[i, j] = c
 
     var = (arr**2).mean()
@@ -36,6 +42,7 @@ class RandomCrop:
     Args:
         output_size (tuple): Desired output size of the crop.
     """
+
     def __init__(self, output_size):
         self.output_size = output_size
         self.n_dims = len(output_size)
@@ -44,9 +51,11 @@ class RandomCrop:
         x_size = x.size()[1:]
         assert all(xs >= os for xs, os in zip(x_size, self.output_size))
 
-        start_idxs = [random.randint(0, xs - os) for xs, os in zip(x_size, self.output_size)]
+        start_idxs = [
+            random.randint(0, xs - os) for xs, os in zip(x_size, self.output_size)
+        ]
         end_idxs = [si + os for si, os in zip(start_idxs, self.output_size)]
-        crop = [slice(0, x.size(0))] 
+        crop = [slice(0, x.size(0))]
         crop += [slice(si, ei) for si, ei in zip(start_idxs, end_idxs)]
 
         return x[crop]
@@ -68,7 +77,7 @@ class TrainDataset(torch.utils.data.Dataset):
         if self.transform:
             image = self.transform(image)
         return image
-    
+
 
 class PredictDataset(torch.utils.data.Dataset):
 
