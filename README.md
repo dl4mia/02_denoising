@@ -30,6 +30,11 @@ mamba activate 02_regression
 jupyter lab
 ```
 
+```bash
+git pull
+git submodule update
+```
+
 ## Exercises
 
 1. [Context-aware restoration](01_CARE/care_exercise.ipynb)
