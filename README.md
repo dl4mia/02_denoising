@@ -18,21 +18,20 @@ image splitting!
 
 Please run the setup script to create the environment for these exercises and download data.
 
+```bash
+git pull
+git submodule update
+```
+
 ``` bash
 source setup.sh
 ```
-
 
 When you are ready to start the exercise, make sure you are in the `02_regression` environment and then run jupyter lab.
 
 ``` bash
 mamba activate 02_regression
 jupyter lab
-```
-
-```bash
-git pull
-git submodule update
 ```
 
 ## Exercises
@@ -48,3 +47,4 @@ git submodule update
 - [Noise2Noise](04_bonus_Noise2Noise/n2n.ipynb)
 
 
+<img width="1212" alt="Screenshot 2024-05-10 at 10 46 51" src="https://github.com/dl4mia/02_regression/assets/16350783/487d2284-cb7a-47a0-99e9-9c13fb7a78ce">
