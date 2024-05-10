@@ -26,6 +26,7 @@ source setup.sh
 When you are ready to start the exercise, make sure you are in your base environment and then run jupyter lab.
 
 ``` bash
+mamba activate 02_regression
 jupyter lab
 ```
 
