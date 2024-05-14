@@ -194,33 +194,33 @@ class Hub(pl.LightningModule):
         )
 
     def log_val_images(self, batch, samples, mmse, direct):
-        d = batch.ndim - 1
+        d = batch.ndim - 2
         if d == 1:
             for i in range(batch.size(0)):
                 figure = plt.figure()
-                plt.plot(batch[i].cpu().half(), label="Noisy", color="blue")
+                plt.plot(batch[0, i].cpu().half(), label="Noisy", color="blue")
                 for j in range(samples.size(0)):
                     plt.plot(samples[j][i].cpu().half(), color="orange", alpha=0.5)
-                plt.plot(mmse[i].cpu().half(), label="Denoised", color="orange")
+                plt.plot(mmse[0, i].cpu().half(), label="Denoised", color="orange")
                 if direct is not None:
-                    plt.plot(direct[i].cpu().half(), label="Direct", color="green")
+                    plt.plot(direct[0, i].cpu().half(), label="Direct", color="green")
                 plt.legend()
                 img = plot_to_image(figure)
                 self.log_image(img, f"channel_{i}")
                 plt.close(figure)
         else:
             if d == 3:
-                batch = batch[:, 0]
-                samples = samples[:, 0]
-                mmse = mmse[:, 0]
+                batch = batch[:, :, 0]
+                samples = samples[:, :, 0]
+                mmse = mmse[:, :, 0]
                 if direct is not None:
-                    direct = direct[:, 0]    
-            self.log_image(batch.cpu().half().numpy(), "inputs/noisy")
+                    direct = direct[:, :, 0]    
+            self.log_image(batch[0].cpu().half().numpy(), "inputs/noisy")
             self.log_image(samples[0].cpu().half().numpy(), "outputs/sample 1")
             self.log_image(samples[1].cpu().half().numpy(), "outputs/sample 2")
-            self.log_image(mmse.cpu().half().numpy(), "outputs/mmse (10 samples)")
+            self.log_image(mmse[0].cpu().half().numpy(), "outputs/mmse (10 samples)")
             if direct is not None:
-                self.log_image(direct.cpu().half().numpy(), "outputs/direct estimate")
+                self.log_image(direct[0].cpu().half().numpy(), "outputs/direct estimate")
 
     def validation_step(self, batch, batch_idx):
         out = self(batch)
@@ -239,7 +239,7 @@ class Hub(pl.LightningModule):
             out = self.forward(batch[idx : idx + 1].repeat_interleave(10, 0))
             mmse = torch.mean(out["s_hat"], 0, keepdim=True)
             x = (batch[idx : idx + 1] - self.data_mean) / self.data_std
-            self.log_val_images(x[0], out["s_hat"], mmse[0], out["s_direct"][0])
+            self.log_val_images(x, out["s_hat"], mmse, out["s_direct"])
 
     def predict_step(self, batch, _):
         self.eval()
